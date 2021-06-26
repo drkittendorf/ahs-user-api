@@ -35,6 +35,8 @@ public class UserRepositoryTest {
         user1.setPassword("password");
         user1.setBio("A bio");
         user1.setInstructor(true);
+        user1.setSenseisCreatedCourses(null);
+        user1.setStudentsRegisteredCourses(null);
 
         repo.save(user1);
 
@@ -46,6 +48,8 @@ public class UserRepositoryTest {
         user2.setPassword("password");
         user2.setBio("A bio");
         user2.setInstructor(true);
+        user2.setSenseisCreatedCourses(null);
+        user2.setStudentsRegisteredCourses(null);
 
         repo.save(user2);
 
@@ -57,6 +61,8 @@ public class UserRepositoryTest {
         user3.setPassword("password");
         user3.setBio("A bio");
         user3.setInstructor(true);
+        user3.setSenseisCreatedCourses(null);
+        user3.setStudentsRegisteredCourses(null);
 
         repo.save(user3);
     }
@@ -65,6 +71,8 @@ public class UserRepositoryTest {
     public void shouldAddAndGetUserFromDatabase() {
 
         User fromRepo = repo.findById(user1.getUserId()).get();
+        fromRepo.setSenseisCreatedCourses(null);
+        fromRepo.setStudentsRegisteredCourses(null);
         assertEquals(user1, fromRepo);
     }
 
@@ -74,6 +82,8 @@ public class UserRepositoryTest {
         repo.save(user1);
 
         User fromRepo = repo.findById(user1.getUserId()).get();
+        fromRepo.setSenseisCreatedCourses(null);
+        fromRepo.setStudentsRegisteredCourses(null);
         assertEquals(user1, fromRepo);
     }
 
@@ -89,8 +99,14 @@ public class UserRepositoryTest {
     @Test
     public void shouldFindUserByEmail() {
         User result1 = repo.findByEmail("nikita@email.com");
+        result1.setSenseisCreatedCourses(null);
+        result1.setStudentsRegisteredCourses(null);
         User result2 = repo.findByEmail("yasha@email.com");
+        result2.setSenseisCreatedCourses(null);
+        result2.setStudentsRegisteredCourses(null);
         User result3 = repo.findByEmail("dale@email.com");
+        result3.setSenseisCreatedCourses(null);
+        result3.setStudentsRegisteredCourses(null);
 
         assertEquals(user1,result1);
         assertEquals(user2,result2);

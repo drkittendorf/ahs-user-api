@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @RestController
 public class UserController {
@@ -57,8 +56,7 @@ public class UserController {
 
     @PostMapping("/studentdash/{id}")
     public void addCourseToListOfRegisteredCourses(@PathVariable Long id, @RequestBody Course studentCourse) {
-        Long studentIdFromRequest = id;
-        User student = userRepo.getById(studentIdFromRequest);
+        User student = userRepo.getById(id);
         Course studentsAddedCourseFromRepo = courseRepo.getById(studentCourse.getCourseId());
 
         student.addCourseToStudentListOfRegisteredCourses(studentsAddedCourseFromRepo);
@@ -99,6 +97,4 @@ public class UserController {
         return null;
 //        throw new Exception();
     }
-
-//    add routes to see registered courses associated with studentId
 }
