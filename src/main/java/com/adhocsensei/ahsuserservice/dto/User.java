@@ -24,10 +24,21 @@ public class User implements Serializable {
     private String bio;
     private boolean instructor;
 
+    @OneToMany(
+//            mappedBy = "courseId",
+            cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+//    @JoinColumn(name = "course_id")
+    private Set<Course> senseisCreatedCourses;
+
+    @OneToMany(
+//            mappedBy = "course",
+            cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<Course> studentsRegisteredCourses;
+
     public User() {
     }
 
-    public User(Long userId, String authority, String firstName, String lastName, String email, String password, String bio, boolean instructor) {
+    public User(Long userId, String authority, String firstName, String lastName, String email, String password, String bio, boolean instructor, Set<Course> senseisCreatedCourses, Set<Course> studentsRegisteredCourses) {
         this.userId = userId;
         this.authority = authority;
         this.firstName = firstName;
@@ -36,6 +47,8 @@ public class User implements Serializable {
         this.password = password;
         this.bio = bio;
         this.instructor = instructor;
+        this.senseisCreatedCourses = senseisCreatedCourses;
+        this.studentsRegisteredCourses = studentsRegisteredCourses;
     }
 
     public Long getUserId() {
@@ -102,17 +115,41 @@ public class User implements Serializable {
         this.instructor = instructor;
     }
 
+    public Set<Course> getSenseisCreatedCourses() {
+        return senseisCreatedCourses;
+    }
+
+    public void setSenseisCreatedCourses(Set<Course> senseisCreatedCourses) {
+        this.senseisCreatedCourses = senseisCreatedCourses;
+    }
+
+    public Set<Course> getStudentsRegisteredCourses() {
+        return studentsRegisteredCourses;
+    }
+
+    public void setStudentsRegisteredCourses(Set<Course> studentsRegisteredCourses) {
+        this.studentsRegisteredCourses = studentsRegisteredCourses;
+    }
+
+    public void addCourseToSenseiListOfCreatedCourses(Course courseId) {
+        senseisCreatedCourses.add(courseId);
+    }
+
+    public void addCourseToStudentListOfRegisteredCourses(Course courseId) {
+        studentsRegisteredCourses.add(courseId);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return isInstructor() == user.isInstructor() && Objects.equals(getUserId(), user.getUserId()) && Objects.equals(getAuthority(), user.getAuthority()) && Objects.equals(getFirstName(), user.getFirstName()) && Objects.equals(getLastName(), user.getLastName()) && Objects.equals(getEmail(), user.getEmail()) && Objects.equals(getPassword(), user.getPassword()) && Objects.equals(getBio(), user.getBio());
+        return isInstructor() == user.isInstructor() && Objects.equals(getUserId(), user.getUserId()) && Objects.equals(getAuthority(), user.getAuthority()) && Objects.equals(getFirstName(), user.getFirstName()) && Objects.equals(getLastName(), user.getLastName()) && Objects.equals(getEmail(), user.getEmail()) && Objects.equals(getPassword(), user.getPassword()) && Objects.equals(getBio(), user.getBio()) && Objects.equals(getSenseisCreatedCourses(), user.getSenseisCreatedCourses()) && Objects.equals(getStudentsRegisteredCourses(), user.getStudentsRegisteredCourses());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getUserId(), getAuthority(), getFirstName(), getLastName(), getEmail(), getPassword(), getBio(), isInstructor());
+        return Objects.hash(getUserId(), getAuthority(), getFirstName(), getLastName(), getEmail(), getPassword(), getBio(), isInstructor(), getSenseisCreatedCourses(), getStudentsRegisteredCourses());
     }
 
     @Override
@@ -126,6 +163,8 @@ public class User implements Serializable {
                 ", password='" + password + '\'' +
                 ", bio='" + bio + '\'' +
                 ", instructor=" + instructor +
+                ", senseisCreatedCourses=" + senseisCreatedCourses +
+                ", studentsRegisteredCourses=" + studentsRegisteredCourses +
                 '}';
     }
 }
