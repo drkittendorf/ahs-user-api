@@ -24,15 +24,10 @@ public class User implements Serializable {
     private String bio;
     private boolean instructor;
 
-    @OneToMany(
-//            mappedBy = "courseId",
-            cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-//    @JoinColumn(name = "course_id")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Course> senseisCreatedCourses;
 
-    @OneToMany(
-//            mappedBy = "course",
-            cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Course> studentsRegisteredCourses;
 
     public User() {
@@ -49,6 +44,9 @@ public class User implements Serializable {
         this.instructor = instructor;
         this.senseisCreatedCourses = senseisCreatedCourses;
         this.studentsRegisteredCourses = studentsRegisteredCourses;
+    }
+//  this constructor is used for testing controller without having senseis courses or students courses
+    public User(Long userId, String authority, String firstName, String lastName, String email, String password, String bio, boolean instructor) {
     }
 
     public Long getUserId() {
