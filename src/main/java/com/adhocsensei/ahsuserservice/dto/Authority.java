@@ -7,30 +7,30 @@ import java.util.Objects;
 
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-@Table(name = "authority")
+@Table(name = "authorities")
 public class Authority {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long authorityId;
+    private Long id;
     private Long userId;
     private String authority;
 
     public Authority() {
     }
 
-    public Authority(Long authorityId, Long userId, String authority) {
-        this.authorityId = authorityId;
+    public Authority(Long id, Long userId, String authority) {
+        this.id = id;
         this.userId = userId;
         this.authority = authority;
     }
 
-    public Long getAuthorityId() {
-        return authorityId;
+    public Long getId() {
+        return id;
     }
 
-    public void setAuthorityId(Long authorityId) {
-        this.authorityId = authorityId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Long getUserId() {
@@ -54,18 +54,18 @@ public class Authority {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Authority authority1 = (Authority) o;
-        return Objects.equals(getAuthorityId(), authority1.getAuthorityId()) && Objects.equals(getUserId(), authority1.getUserId()) && Objects.equals(getAuthority(), authority1.getAuthority());
+        return Objects.equals(getId(), authority1.getId()) && Objects.equals(getUserId(), authority1.getUserId()) && Objects.equals(getAuthority(), authority1.getAuthority());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getAuthorityId(), getUserId(), getAuthority());
+        return Objects.hash(getId(), getUserId(), getAuthority());
     }
 
     @Override
     public String toString() {
         return "Authority{" +
-                "authorityId=" + authorityId +
+                "authorityId=" + id +
                 ", userId=" + userId +
                 ", authority='" + authority + '\'' +
                 '}';

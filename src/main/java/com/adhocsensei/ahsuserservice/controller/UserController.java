@@ -37,17 +37,17 @@ public class UserController {
         return userRepo.findById(id);
     }
 
-    @GetMapping("/user/email")
-    public User getUserByEmail(@RequestBody User user) {
-        return userRepo.findByEmail(user.getEmail());
-    }
+//    @GetMapping("/user/email")
+//    public User getUserByEmail(@RequestBody User user) {
+//        return userRepo.findByEmail(user.getEmail());
+//    }
 
     @PostMapping("/user")
     @ResponseStatus(HttpStatus.CREATED)
     public User createUser(@RequestBody User user) {
         User createdUser = userRepo.save(user);
 
-        Long userIdForAuthorityTable = createdUser.getUserId();
+        Long userIdForAuthorityTable = createdUser.getId();
         String userAuthorityForAuthorityTable = createdUser.getAuthority();
 
         Authority newAuthority = new Authority();
@@ -59,34 +59,11 @@ public class UserController {
         return createdUser;
     }
 
-    @PostMapping("/senseidash/{id}")
-    public void addCourseToListOfSenseisCourses(@PathVariable Long id, @RequestBody Course senseiCourse) {
-        Long senseiIdFromRequest = senseiCourse.getSenseiId();
-        User sensei = userRepo.getById(senseiIdFromRequest);
-        Course senseisCreatedCourseFromRepo = courseRepo.getById(senseiCourse.getCourseId());
-
-        sensei.addCourseToSenseiListOfCreatedCourses(senseisCreatedCourseFromRepo);
-
-        userRepo.save(sensei);
-    }
-
-    @DeleteMapping("/senseidash/{id}")
-    public void removeACourseFromSenseiListOfCourses(@PathVariable Long id, @RequestBody Course senseiCourse) {
-        Long senseiIdFromRequest = senseiCourse.getSenseiId();
-        User sensei = userRepo.getById(senseiIdFromRequest);
-        Course senseisCourseToBeDeletedFromRepo = courseRepo.getById(senseiCourse.getCourseId());
-
-        sensei.removeCourseFromSenseiListOfCreatedCourses(senseisCourseToBeDeletedFromRepo);
-
-        userRepo.save(sensei);
-    }
-
     @PostMapping("/studentdash/{id}")
-    public void addCourseToListOfRegisteredCourses(@PathVariable Long id, @RequestBody Course studentCourse) {
+    public void registerForCourse(@PathVariable Long id, @RequestBody Course studentCourse) {
         User student = userRepo.getById(id);
-        Course studentsAddedCourseFromRepo = courseRepo.getById(studentCourse.getCourseId());
 
-        student.addCourseToStudentListOfRegisteredCourses(studentsAddedCourseFromRepo);
+        student.getStudentsRegisteredCourses().add(studentCourse);
 
         userRepo.save(student);
     }
@@ -94,7 +71,7 @@ public class UserController {
     @DeleteMapping("/studentdash/{id}")
     public void unregisterFromCourse(@PathVariable Long id, @RequestBody Course studentCourse) {
         User student = userRepo.getById(id);
-        Course courseToDeleteFromStudentRepo = courseRepo.getById(studentCourse.getCourseId());
+        Course courseToDeleteFromStudentRepo = courseRepo.getById(studentCourse.getId());
 
         student.removeCourseFromStudentListOfRegisteredCourses(courseToDeleteFromStudentRepo);
 
@@ -104,6 +81,7 @@ public class UserController {
     @PutMapping("/user/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateUser(@PathVariable Long id, @RequestBody User user) {
+        user.setId(id);
         userRepo.save(user);
     }
 

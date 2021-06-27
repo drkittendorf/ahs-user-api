@@ -1,6 +1,9 @@
 package com.adhocsensei.ahsuserservice.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -8,12 +11,12 @@ import java.util.Objects;
 
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-@Table(name = "course")
+@Table(name = "courses")
 public class Course implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long courseId;
+    private Long id;
     private String title;
     private String category;
 
@@ -25,13 +28,21 @@ public class Course implements Serializable {
     private Integer duration;
     private Integer capacity;
     private String longDescription;
+
+
     private Long senseiId;
+
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "user_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+//    @JsonIgnore
+    private User user;
 
     public Course() {
     }
 
-    public Course(Long courseId, String title, String category, String date, String shortDescription, String location, Integer duration, Integer capacity, String longDescription, Long senseiId) {
-        this.courseId = courseId;
+    public Course(Long id, String title, String category, String date, String shortDescription, String location, Integer duration, Integer capacity, String longDescription, Long senseiId, User user) {
+        this.id = id;
         this.title = title;
         this.category = category;
         this.date = date;
@@ -41,14 +52,15 @@ public class Course implements Serializable {
         this.capacity = capacity;
         this.longDescription = longDescription;
         this.senseiId = senseiId;
+        this.user = user;
     }
 
-    public Long getCourseId() {
-        return courseId;
+    public Long getId() {
+        return id;
     }
 
-    public void setCourseId(Long courseId) {
-        this.courseId = courseId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -123,23 +135,31 @@ public class Course implements Serializable {
         this.senseiId = senseiId;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Course course = (Course) o;
-        return Objects.equals(getCourseId(), course.getCourseId()) && Objects.equals(getTitle(), course.getTitle()) && Objects.equals(getCategory(), course.getCategory()) && Objects.equals(getDate(), course.getDate()) && Objects.equals(getShortDescription(), course.getShortDescription()) && Objects.equals(getLocation(), course.getLocation()) && Objects.equals(getDuration(), course.getDuration()) && Objects.equals(getCapacity(), course.getCapacity()) && Objects.equals(getLongDescription(), course.getLongDescription()) && Objects.equals(getSenseiId(), course.getSenseiId());
+        return Objects.equals(getId(), course.getId()) && Objects.equals(getTitle(), course.getTitle()) && Objects.equals(getCategory(), course.getCategory()) && Objects.equals(getDate(), course.getDate()) && Objects.equals(getShortDescription(), course.getShortDescription()) && Objects.equals(getLocation(), course.getLocation()) && Objects.equals(getDuration(), course.getDuration()) && Objects.equals(getCapacity(), course.getCapacity()) && Objects.equals(getLongDescription(), course.getLongDescription()) && Objects.equals(getSenseiId(), course.getSenseiId()) && Objects.equals(getUser(), course.getUser());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getCourseId(), getTitle(), getCategory(), getDate(), getShortDescription(), getLocation(), getDuration(), getCapacity(), getLongDescription(), getSenseiId());
+        return Objects.hash(getId(), getTitle(), getCategory(), getDate(), getShortDescription(), getLocation(), getDuration(), getCapacity(), getLongDescription(), getSenseiId(), getUser());
     }
 
     @Override
     public String toString() {
         return "Course{" +
-                "courseId=" + courseId +
+                "courseId=" + id +
                 ", title='" + title + '\'' +
                 ", category='" + category + '\'' +
                 ", date='" + date + '\'' +
@@ -149,6 +169,7 @@ public class Course implements Serializable {
                 ", capacity=" + capacity +
                 ", longDescription='" + longDescription + '\'' +
                 ", senseiId=" + senseiId +
+                ", user=" + user +
                 '}';
     }
 }
