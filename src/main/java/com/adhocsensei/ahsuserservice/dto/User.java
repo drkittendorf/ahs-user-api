@@ -133,8 +133,16 @@ public class User implements Serializable {
         senseisCreatedCourses.add(courseId);
     }
 
+    public void removeCourseFromSenseiListOfCreatedCourses(Course courseId) {
+        senseisCreatedCourses.remove(courseId);
+    }
+
     public void addCourseToStudentListOfRegisteredCourses(Course courseId) {
         studentsRegisteredCourses.add(courseId);
+    }
+
+    public void removeCourseFromStudentListOfRegisteredCourses(Course courseId) {
+        studentsRegisteredCourses.remove(courseId);
     }
 
     @Override
