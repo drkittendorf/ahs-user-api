@@ -1,7 +1,9 @@
 package com.adhocsensei.ahsuserservice.controller;
 
+import com.adhocsensei.ahsuserservice.dao.AuthorityRepository;
 import com.adhocsensei.ahsuserservice.dao.CourseRepository;
 import com.adhocsensei.ahsuserservice.dao.UserRepository;
+import com.adhocsensei.ahsuserservice.dto.Authority;
 import com.adhocsensei.ahsuserservice.dto.Course;
 import com.adhocsensei.ahsuserservice.dto.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,9 @@ public class UserController {
 
     @Autowired
     CourseRepository courseRepo;
+
+    @Autowired
+    AuthorityRepository authorityRepo;
 
     @GetMapping("/user")
     @ResponseStatus(HttpStatus.OK)
@@ -40,7 +45,18 @@ public class UserController {
     @PostMapping("/user")
     @ResponseStatus(HttpStatus.CREATED)
     public User createUser(@RequestBody User user) {
-        return userRepo.save(user);
+        User createdUser = userRepo.save(user);
+
+        Long userIdForAuthorityTable = createdUser.getUserId();
+        String userAuthorityForAuthorityTable = createdUser.getAuthority();
+
+        Authority newAuthority = new Authority();
+        newAuthority.setUserId(userIdForAuthorityTable);
+        newAuthority.setAuthority(userAuthorityForAuthorityTable);
+
+        authorityRepo.save(newAuthority);
+
+        return createdUser;
     }
 
     @PostMapping("/senseidash/{id}")
@@ -54,12 +70,33 @@ public class UserController {
         userRepo.save(sensei);
     }
 
+    @DeleteMapping("/senseidash/{id}")
+    public void removeACourseFromSenseiListOfCourses(@PathVariable Long id, @RequestBody Course senseiCourse) {
+        Long senseiIdFromRequest = senseiCourse.getSenseiId();
+        User sensei = userRepo.getById(senseiIdFromRequest);
+        Course senseisCourseToBeDeletedFromRepo = courseRepo.getById(senseiCourse.getCourseId());
+
+        sensei.removeCourseFromSenseiListOfCreatedCourses(senseisCourseToBeDeletedFromRepo);
+
+        userRepo.save(sensei);
+    }
+
     @PostMapping("/studentdash/{id}")
     public void addCourseToListOfRegisteredCourses(@PathVariable Long id, @RequestBody Course studentCourse) {
         User student = userRepo.getById(id);
         Course studentsAddedCourseFromRepo = courseRepo.getById(studentCourse.getCourseId());
 
         student.addCourseToStudentListOfRegisteredCourses(studentsAddedCourseFromRepo);
+
+        userRepo.save(student);
+    }
+
+    @DeleteMapping("/studentdash/{id}")
+    public void unregisterFromCourse(@PathVariable Long id, @RequestBody Course studentCourse) {
+        User student = userRepo.getById(id);
+        Course courseToDeleteFromStudentRepo = courseRepo.getById(studentCourse.getCourseId());
+
+        student.removeCourseFromStudentListOfRegisteredCourses(courseToDeleteFromStudentRepo);
 
         userRepo.save(student);
     }
