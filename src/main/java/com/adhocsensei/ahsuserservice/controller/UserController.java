@@ -113,7 +113,7 @@ public class UserController {
         userRepo.deleteById(id);
     }
 
-    @GetMapping("/login")
+    @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
     public User loginUser(@RequestBody User user) throws Exception {
         Optional<User> optionalUser = Optional.ofNullable(userRepo.findByEmail(user.getEmail()));
