@@ -4,17 +4,19 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-@Table(name = "user")
+@Table(name = "users")
 public class User implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long userId;
+    private Long id;
     private String authority;
     private String firstName;
     private String lastName;
@@ -24,17 +26,18 @@ public class User implements Serializable {
     private String bio;
     private boolean instructor;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Set<Course> senseisCreatedCourses;
+
+//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    private Set<Course> senseisCreatedCourses;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Set<Course> studentsRegisteredCourses;
+    private List<Course> studentsRegisteredCourses = new ArrayList<>();
 
     public User() {
     }
 
-    public User(Long userId, String authority, String firstName, String lastName, String email, String password, String bio, boolean instructor, Set<Course> senseisCreatedCourses, Set<Course> studentsRegisteredCourses) {
-        this.userId = userId;
+    public User(Long id, String authority, String firstName, String lastName, String email, String password, String bio, boolean instructor, List<Course> studentsRegisteredCourses) {
+        this.id = id;
         this.authority = authority;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -42,19 +45,19 @@ public class User implements Serializable {
         this.password = password;
         this.bio = bio;
         this.instructor = instructor;
-        this.senseisCreatedCourses = senseisCreatedCourses;
         this.studentsRegisteredCourses = studentsRegisteredCourses;
     }
-//  this constructor is used for testing controller without having senseis courses or students courses
-    public User(Long userId, String authority, String firstName, String lastName, String email, String password, String bio, boolean instructor) {
+
+    //  this constructor is used for testing controller without having senseis courses or students courses
+    public User(Long id, String authority, String firstName, String lastName, String email, String password, String bio, boolean instructor) {
     }
 
-    public Long getUserId() {
-        return userId;
+    public Long getId() {
+        return id;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getAuthority() {
@@ -113,28 +116,12 @@ public class User implements Serializable {
         this.instructor = instructor;
     }
 
-    public Set<Course> getSenseisCreatedCourses() {
-        return senseisCreatedCourses;
-    }
-
-    public void setSenseisCreatedCourses(Set<Course> senseisCreatedCourses) {
-        this.senseisCreatedCourses = senseisCreatedCourses;
-    }
-
-    public Set<Course> getStudentsRegisteredCourses() {
+    public List<Course> getStudentsRegisteredCourses() {
         return studentsRegisteredCourses;
     }
 
-    public void setStudentsRegisteredCourses(Set<Course> studentsRegisteredCourses) {
+    public void setStudentsRegisteredCourses(List<Course> studentsRegisteredCourses) {
         this.studentsRegisteredCourses = studentsRegisteredCourses;
-    }
-
-    public void addCourseToSenseiListOfCreatedCourses(Course courseId) {
-        senseisCreatedCourses.add(courseId);
-    }
-
-    public void removeCourseFromSenseiListOfCreatedCourses(Course courseId) {
-        senseisCreatedCourses.remove(courseId);
     }
 
     public void addCourseToStudentListOfRegisteredCourses(Course courseId) {
@@ -150,18 +137,18 @@ public class User implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return isInstructor() == user.isInstructor() && Objects.equals(getUserId(), user.getUserId()) && Objects.equals(getAuthority(), user.getAuthority()) && Objects.equals(getFirstName(), user.getFirstName()) && Objects.equals(getLastName(), user.getLastName()) && Objects.equals(getEmail(), user.getEmail()) && Objects.equals(getPassword(), user.getPassword()) && Objects.equals(getBio(), user.getBio()) && Objects.equals(getSenseisCreatedCourses(), user.getSenseisCreatedCourses()) && Objects.equals(getStudentsRegisteredCourses(), user.getStudentsRegisteredCourses());
+        return isInstructor() == user.isInstructor() && Objects.equals(getId(), user.getId()) && Objects.equals(getAuthority(), user.getAuthority()) && Objects.equals(getFirstName(), user.getFirstName()) && Objects.equals(getLastName(), user.getLastName()) && Objects.equals(getEmail(), user.getEmail()) && Objects.equals(getPassword(), user.getPassword()) && Objects.equals(getBio(), user.getBio()) && Objects.equals(getStudentsRegisteredCourses(), user.getStudentsRegisteredCourses());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getUserId(), getAuthority(), getFirstName(), getLastName(), getEmail(), getPassword(), getBio(), isInstructor(), getSenseisCreatedCourses(), getStudentsRegisteredCourses());
+        return Objects.hash(getId(), getAuthority(), getFirstName(), getLastName(), getEmail(), getPassword(), getBio(), isInstructor(), getStudentsRegisteredCourses());
     }
 
     @Override
     public String toString() {
         return "User{" +
-                "userId=" + userId +
+                "id=" + id +
                 ", authority='" + authority + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
@@ -169,8 +156,8 @@ public class User implements Serializable {
                 ", password='" + password + '\'' +
                 ", bio='" + bio + '\'' +
                 ", instructor=" + instructor +
-                ", senseisCreatedCourses=" + senseisCreatedCourses +
                 ", studentsRegisteredCourses=" + studentsRegisteredCourses +
                 '}';
     }
+
 }
